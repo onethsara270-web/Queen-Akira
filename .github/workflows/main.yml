@@ -1,0 +1,157 @@
+# ══════════════════════════════════════════════════════════════
+# ⚡ PATHUMTECH MD — WhatsApp Bot Auto-Restart with Ngrok
+# 🛡️ © 2024-2026 PathumTech — DO NOT REMOVE CREDIT
+# ══════════════════════════════════════════════════════════════
+
+name: ⚡ PATHUMTECH MD — Auto Restart
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  # ═══════════════════════════════════════════════════════════
+  # 🤖 JOB 1: Main Bot Runner
+  # ═══════════════════════════════════════════════════════════
+  run-bot:
+    name: 🤖 Run PATHUMTECH MD Bot
+    runs-on: ubuntu-latest
+    timeout-minutes: 355   # GitHub max = 360 min (6 hours)
+    outputs:
+      status: ${{ steps.bot-run.outcome }}
+
+    steps:
+      # ─────────────────────────────────────────────────────
+      # 📥 1. Checkout
+      # ─────────────────────────────────────────────────────
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      # ─────────────────────────────────────────────────────
+      # ⚙️ 2. Setup Node.js
+      # ─────────────────────────────────────────────────────
+      - name: ⚙️ Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ─────────────────────────────────────────────────────
+      # 📦 3. Install Dependencies
+      # ─────────────────────────────────────────────────────
+      - name: 📦 Install Dependencies
+        run: |
+          echo "⚡ Installing PATHUMTECH MD..."
+          npm install --no-audit --no-fund --legacy-peer-deps
+          # tiktok-search වැඩ කරන්න මේක එකතු කළා
+          npm install async-retry
+          echo "✅ Dependencies installed"
+
+      # ─────────────────────────────────────────────────────
+      # 🔧 4. Setup Directories
+      # ─────────────────────────────────────────────────────
+      - name: 🔧 Setup Directories
+        run: |
+          mkdir -p sessions data user-sessions user-configs
+          echo "✅ Directories ready"
+
+      # ─────────────────────────────────────────────────────
+      # 🔐 5. Load Secrets
+      # ─────────────────────────────────────────────────────
+      - name: 🔐 Load Environment
+        run: |
+          echo "SESSION_ID=${{ secrets.SESSION_ID }}" >> $GITHUB_ENV
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> $GITHUB_ENV
+          echo "DASHBOARD_PASSWORD=${{ secrets.DASHBOARD_PASSWORD }}" >> $GITHUB_ENV
+          echo "OWNER_NUMBER=${{ secrets.OWNER_NUMBER }}" >> $GITHUB_ENV
+          echo "PORT=8000" >> $GITHUB_ENV
+          echo "NODE_ENV=production" >> $GITHUB_ENV
+          echo "✅ Secrets loaded"
+
+      # ─────────────────────────────────────────────────────
+      # 🌐 6. Install & Setup Ngrok (FIXED LINK & URL)
+      # ─────────────────────────────────────────────────────
+      - name: 🌐 Install & Start Ngrok
+        env:
+          NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }}
+        run: |
+          echo "🌐 Installing Ngrok..."
+          curl -sSL https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz | tar xz
+          sudo mv ngrok /usr/local/bin
+          
+          echo "🔐 Configuring Ngrok..."
+          ngrok config add-authtoken $NGROK_AUTHTOKEN
+          
+          echo "🚀 Starting Ngrok Tunnel on Port 8000..."
+          ngrok http 8000 --log=stdout > ngrok.log &
+          sleep 10  # Ngrok එකට සම්පූර්ණයෙන්ම start වෙන්න තත්පර 10ක් ඉඩ දෙනවා
+          
+          echo "════════════════════════════════════════"
+          echo "✅ YOUR BOT PUBLIC URL IS:"
+          # jq පාවිච්චි කරලා Ngrok API එකෙන් කෙලින්ම URL එක ගන්නවා
+          curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url'
+          echo "════════════════════════════════════════"
+
+      # ─────────────────────────────────────────────────────
+      # 🚀 7. Start Bot (with auto-timeout at 5h50m)
+      # ─────────────────────────────────────────────────────
+      - name: 🚀 Start PATHUMTECH MD
+        id: bot-run
+        continue-on-error: true
+        run: |
+          echo "════════════════════════════════════════"
+          echo "⚡ PATHUMTECH MD — Starting Bot"
+          echo "🕐 Started: $(date)"
+          echo "════════════════════════════════════════"
+
+          # Auto-timeout after 5h50m (21000 sec) to avoid 6h hard kill
+          timeout 21000 node index.js || EXIT_CODE=$?
+
+          echo "════════════════════════════════════════"
+          echo "⚡ Bot stopped (exit: $EXIT_CODE)"
+          echo "🕐 Stopped: $(date)"
+          echo "════════════════════════════════════════"
+
+      # ─────────────────────────────────────────────────────
+      # 📤 8. Upload Logs (if error)
+      # ─────────────────────────────────────────────────────
+      - name: 📤 Upload Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bot-logs-${{ github.run_number }}
+          path: |
+            *.log
+            logs/
+          retention-days: 3
+          if-no-files-found: ignore
+
+  # ═══════════════════════════════════════════════════════════
+  # 🔄 JOB 2: Auto Restart Trigger
+  # ═══════════════════════════════════════════════════════════
+  auto-restart:
+    name: 🔄 Trigger Restart
+    runs-on: ubuntu-latest
+    needs: run-bot
+    if: always()
+    steps:
+      - name: 🔄 Restart After 30 Seconds
+        run: |
+          echo "🔄 Bot run finished — waiting 30s before restart..."
+          sleep 30
+          echo "✅ Ready to restart"
+
+      - name: 🚀 Trigger New Workflow Run
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: main.yml
+          token: ${{ secrets.GH_PAT }}
+          inputs: '{"reason": "auto-restart after 6h limit"}'
+
+      - name: ✅ Restart Triggered
+        run: |
+          echo "════════════════════════════════════════"
+          echo "🎉 PATHUMTECH MD — Auto-Restart Triggered!"
+          echo "🕐 $(date)"
+          echo "⚡ © 2024-2026 PathumTech"
+          echo "════════════════════════════════════════"

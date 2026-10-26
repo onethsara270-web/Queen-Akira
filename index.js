@@ -82,7 +82,7 @@ function renderPage(name, vars = {}) {
 
 try { if (typeof initializeAntiDeleteSettings === 'function') initializeAntiDeleteSettings(); } catch (e) {}
 
-const ownerNumber = [config.OWNER_NUMBER || '94773416478']
+const ownerNumber = [config.OWNER_NUMBER || '94703945265']
 const OWNER_DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWORD || 'pathum8248';
 global.DASHBOARD_USERS = { [OWNER_DASHBOARD_PASSWORD]: { name: 'Owner', role: 'owner' } };
 

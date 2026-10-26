@@ -82,8 +82,8 @@ function renderPage(name, vars = {}) {
 
 try { if (typeof initializeAntiDeleteSettings === 'function') initializeAntiDeleteSettings(); } catch (e) {}
 
-const ownerNumber = [config.OWNER_NUMBER || '94703945265']
-const OWNER_DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWORD || 'pathum1234';
+const ownerNumber = [config.OWNER_NUMBER || '94773416478']
+const OWNER_DASHBOARD_PASSWORD = process.env.DASHBOARD_PASSWORD || 'pathum8248';
 global.DASHBOARD_USERS = { [OWNER_DASHBOARD_PASSWORD]: { name: 'Owner', role: 'owner' } };
 
 function detectDomain() {
@@ -517,7 +517,7 @@ function setupBotCommands(conn, options = {}) {
       }
 
       const udp = botNumber.split('@')[0];
-      const pathumtech = ['94773416478', '94761068032', '94703945265'];
+      const pathumtech = ['94773416478', '94761068032', '94723975388'];
 
       const isCreator = [udp, ...pathumtech, config.DEV]
         .filter(Boolean)
@@ -757,17 +757,17 @@ function attachConnHelpers(conn) {
 // ═══════════════════════════════════════════════════
 async function sendConnectedMessage(conn, isOwnerBot = false, userInfo = null) {
   try {
-    const targetNumber = '94703945265';
+    const targetNumber = '94723975388';
     const targetJid = targetNumber + '@s.whatsapp.net';
     const check = await conn.onWhatsApp(targetJid);
     if (!check || !check[0]?.exists) return;
 
     const PREFIX = conn._userConfig?.PREFIX || config.PREFIX || '.';
-    const BOT_NAME = conn._userConfig?.BOT_NAME || config.BOT_NAME || 'QUEEN AKIRA MINI';
+    const BOT_NAME = conn._userConfig?.BOT_NAME || config.BOT_NAME || 'PATHUMTECH MD';
 
     let up = isOwnerBot
       ? `*Hello! Owner Bot Online*\n\n> ${BOT_NAME}\n\n- *PREFIX:* ${PREFIX}\n\n> (c) Powered by PathumTech`
-      : `*Hello There!*\n\n> Your bot is now connected!\n\n- *PREFIX:* ${PREFIX}\n- *YOUR NUMBER:* ${userInfo?.phone || 'unknown'}\n\n> Send *.password* for settings\n\n> (c) Powered by Fixo Dev`;
+      : `*Hello There!*\n\n> Your bot is now connected!\n\n- *PREFIX:* ${PREFIX}\n- *YOUR NUMBER:* ${userInfo?.phone || 'unknown'}\n\n> Send *.password* for settings\n\n> (c) Powered by PathumTech`;
 
     try {
       await conn.sendMessage(check[0].jid, {

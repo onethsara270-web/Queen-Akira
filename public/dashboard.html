@@ -1,0 +1,245 @@
+<!DOCTYPE html><html><head><title>Dashboard — LUXALGO MD</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<style>
+.container{max-width:1280px}
+
+.hero{
+  background:linear-gradient(145deg,rgba(139,92,246,0.06),rgba(236,72,153,0.04));
+  border:1.5px solid rgba(168,85,247,0.2);
+  border-radius:26px;padding:42px 32px;margin-bottom:26px;text-align:center;
+  position:relative;overflow:hidden;
+  animation:fadeUp 0.75s ease;
+  box-shadow:0 25px 75px rgba(139,92,246,0.2);
+}
+.status-ring{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:124px;height:124px;border-radius:50%;
+  position:relative;margin-bottom:22px;
+}
+.status-ring.online{
+  background:conic-gradient(#8b5cf6,#ec4899,#fbbf24,#8b5cf6);
+  animation:ringPulse 2.5s ease infinite,spin 6s linear infinite;
+}
+.status-ring.offline{background:conic-gradient(#ef4444,#ec4899,#ef4444)}
+@keyframes ringPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,0.5),0 0 60px rgba(139,92,246,0.45)}
+  50%{box-shadow:0 0 0 30px rgba(139,92,246,0),0 0 90px rgba(236,72,153,0.6)}
+}
+.status-ring::before{content:'';position:absolute;inset:5px;background:var(--bg);border-radius:50%}
+.status-inner{position:relative;z-index:1;font-size:2.6em;font-weight:900;filter:drop-shadow(0 0 20px rgba(255,255,255,0.55))}
+.hero h2{
+  font-size:1.75em;font-weight:900;margin-bottom:6px;
+  background:linear-gradient(120deg,#ec4899,#a855f7,#8b5cf6);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero h2.offline{background:linear-gradient(120deg,#ef4444,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:#8a8aa0;font-size:0.9em;font-family:'JetBrains Mono',monospace;font-weight:600}
+
+.uptime-card{
+  background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(236,72,153,0.06));
+  border:1.5px solid rgba(168,85,247,0.25);
+  border-radius:26px;padding:34px;text-align:center;margin-bottom:26px;
+  animation:fadeUp 0.75s ease 0.05s backwards;
+  box-shadow:0 20px 65px rgba(139,92,246,0.18);
+}
+.uptime-value{
+  font-size:3em;font-weight:900;font-family:'JetBrains Mono',monospace;
+  background:linear-gradient(90deg,#ec4899,#a855f7,#8b5cf6,#ec4899);
+  background-size:300% 100%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-2px;animation:shine 4s linear infinite;
+}
+.uptime-label{color:#8a8aa0;font-size:0.8em;text-transform:uppercase;letter-spacing:3px;margin-top:10px;font-weight:800}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:26px}
+.card-icon{font-size:1.8em;margin-bottom:14px;display:block}
+.card-label{font-size:0.72em;color:#5a5a6c;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;font-weight:800}
+.card-value{font-size:1.55em;font-weight:900;color:#fff;font-family:'JetBrains Mono',monospace;word-break:break-word}
+.card-value.purple{color:#a855f7;text-shadow:0 0 20px rgba(168,85,247,0.5)}
+.card-value.pink{color:#ec4899;text-shadow:0 0 20px rgba(236,72,153,0.5)}
+.card-value.gold{color:#fbbf24;text-shadow:0 0 20px rgba(251,191,36,0.5)}
+.card-value.cyan{color:#06b6d4;text-shadow:0 0 20px rgba(6,182,212,0.5)}
+.card-value.green{color:#10b981;text-shadow:0 0 20px rgba(16,185,129,0.5)}
+
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:26px}
+.info-item{
+  background:rgba(255,255,255,0.03);
+  border:1.5px solid rgba(255,255,255,0.06);
+  border-radius:14px;padding:18px 22px;
+}
+.info-key{font-size:0.7em;color:#5a5a6c;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;font-weight:800}
+.info-val{font-size:0.92em;color:#c8c8d8;font-family:'JetBrains Mono',monospace;word-break:break-all;font-weight:600}
+
+.live-dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:#10b981;margin-right:8px;
+  box-shadow:0 0 15px #10b981;
+  animation:pulse 1.8s infinite;
+}
+
+.users-table{width:100%;border-collapse:collapse;font-size:0.86em}
+.users-table th{
+  text-align:left;padding:14px 12px;color:#8a8aa0;
+  font-size:0.74em;text-transform:uppercase;
+  border-bottom:1.5px solid rgba(255,255,255,0.08);
+  font-weight:800;letter-spacing:1.5px;
+}
+.users-table td{padding:16px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:#c8c8d8}
+.users-table tr:hover{background:rgba(139,92,246,0.03)}
+
+.remove-btn{
+  background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(244,63,94,0.1));
+  border:1.5px solid rgba(239,68,68,0.4);
+  color:#fda4af;padding:9px 16px;border-radius:10px;
+  font-size:0.76em;font-weight:800;cursor:pointer;
+  font-family:inherit;transition:all 0.3s;
+}
+.remove-btn:hover{
+  background:linear-gradient(135deg,rgba(239,68,68,0.3),rgba(244,63,94,0.18));
+  transform:translateY(-1px);color:#fff;
+}
+
+.pass-copy{
+  font-family:'JetBrains Mono',monospace;
+  background:rgba(139,92,246,0.12);
+  padding:5px 12px;border-radius:8px;
+  color:#c4b5fd;font-size:0.9em;cursor:pointer;
+  font-weight:800;border:1.5px solid rgba(168,85,247,0.3);
+  transition:all 0.3s;letter-spacing:1.5px;
+}
+.pass-copy:hover{
+  background:rgba(139,92,246,0.25);
+  border-color:rgba(236,72,153,0.5);
+  color:#fff;
+}
+
+.table-wrapper{overflow-x:auto;border-radius:14px}
+</style></head>
+<body>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<div class="container">
+  <div class="header">
+    <div class="brand">
+      <div class="mini-logo">👑</div>
+      <div style="font-size:1.35em;font-weight:900;background:linear-gradient(120deg,#ec4899,#a855f7,#8b5cf6);background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shine 5s linear infinite">LUXALGO MD</div>
+    </div>
+    <div class="nav">
+      <span class="userinfo">👤 {{NAME}} <span>[{{ROLE}}]</span></span>
+      <a href="/dashboard?key={{KEY}}" class="active">📊 Dashboard</a>
+      <a href="/settings?key={{KEY}}">⚙️ Settings</a>
+      <a href="/login">🚪 Logout</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="status-ring {{STATUS_RING}}">
+      <span class="status-inner">{{STATUS_ICON}}</span>
+    </div>
+    <h2 class="{{STATUS_TEXT_CLASS}}">{{STATUS_TEXT}}</h2>
+    <p>{{STATUS_USER}}</p>
+  </div>
+
+  <div class="uptime-card">
+    <div class="uptime-value" id="uptime">--</div>
+    <div class="uptime-label">⏱️ System Uptime</div>
+  </div>
+
+  <div class="grid">
+    <div class="card" style="animation-delay:0.05s"><span class="card-icon">💾</span><div class="card-label">RAM Used</div><div class="card-value green" id="ram-used">--</div></div>
+    <div class="card" style="animation-delay:0.1s"><span class="card-icon">📊</span><div class="card-label">RAM Total</div><div class="card-value cyan" id="ram-total">--</div></div>
+    <div class="card" style="animation-delay:0.15s"><span class="card-icon">👥</span><div class="card-label">Total Users</div><div class="card-value purple" id="total-users">--</div></div>
+    <div class="card" style="animation-delay:0.2s"><span class="card-icon">🤖</span><div class="card-label">Active Bots</div><div class="card-value pink" id="active-bots">--</div></div>
+    <div class="card" style="animation-delay:0.25s"><span class="card-icon">🖥️</span><div class="card-label">Platform</div><div class="card-value" id="platform" style="font-size:1.15em">--</div></div>
+    <div class="card" style="animation-delay:0.3s"><span class="card-icon">📡</span><div class="card-label">Hostname</div><div class="card-value" id="hostname" style="font-size:0.95em">--</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:26px;padding:28px">
+    <h3 style="color:#ec4899;margin-bottom:20px;font-size:1.12em;font-weight:900;display:flex;align-items:center;gap:8px">👥 Deployed Users</h3>
+    <div id="users-list" class="table-wrapper">
+      <div style="color:#8a8aa0;font-size:0.88em;padding:20px 0;text-align:center"><span class="loading"></span> Loading...</div>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-item"><div class="info-key">💻 CPU</div><div class="info-val" id="cpu">--</div></div>
+    <div class="info-item"><div class="info-key">🚀 Started At</div><div class="info-val" id="started">--</div></div>
+    <div class="info-item"><div class="info-key">🔄 Last Update</div><div class="info-val" id="updated">--</div></div>
+    <div class="info-item"><div class="info-key">📦 RSS Memory</div><div class="info-val" id="rss">--</div></div>
+  </div>
+
+  <div class="footer"><span class="live-dot"></span>Live • Auto-refresh 5s<br><br>✨ Powered by <span>LUXALGO</span> 🖤</div>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const KEY = '{{KEY}}';
+async function fetchStatus() {
+  try {
+    const r = await fetch('/status');
+    const d = await r.json();
+    const fmt = (iso) => new Date(iso).toLocaleString('en-GB',{timeZone:'Asia/Colombo',hour12:true});
+    document.getElementById('uptime').textContent = d.uptimeFormatted || '--';
+    document.getElementById('ram-used').textContent = d.memory.used;
+    document.getElementById('ram-total').textContent = d.memory.total;
+    document.getElementById('total-users').textContent = d.users?.total || 0;
+    document.getElementById('active-bots').textContent = d.users?.activeBots || 0;
+    document.getElementById('platform').textContent = d.system.platform;
+    document.getElementById('hostname').textContent = d.system.hostname;
+    document.getElementById('cpu').textContent = d.system.cpu.split(' ').slice(0,3).join(' ');
+    document.getElementById('started').textContent = fmt(d.startedAt);
+    document.getElementById('updated').textContent = d.lastUpdate ? fmt(d.lastUpdate) : 'N/A';
+    document.getElementById('rss').textContent = d.memory.rss;
+  } catch(e) {}
+}
+async function fetchUsers() {
+  try {
+    const r = await fetch('/api/admin/users?key=' + KEY);
+    const d = await r.json();
+    const el = document.getElementById('users-list');
+    if (!d.success || !d.users || d.users.length === 0) {
+      el.innerHTML = '<div style="color:#8a8aa0;font-size:0.88em;padding:24px 0;text-align:center">✨ No users deployed yet</div>';
+      return;
+    }
+    let html = '<table class="users-table"><thead><tr><th>📱 Phone</th><th>👤 Name</th><th>🔑 Password</th><th>⚡ Status</th><th>📅 Deployed</th><th>⚙️ Actions</th></tr></thead><tbody>';
+    for (const u of d.users) {
+      const badge = u.botStatus === 'active' ? '<span class="badge on">✅ Online</span>' :
+                    u.botStatus === 'qr_ready' ? '<span class="badge qr">📷 QR</span>' :
+                    u.botStatus === 'pairing_code_ready' ? '<span class="badge qr">🔢 Code</span>' :
+                    u.botStatus === 'connecting' ? '<span class="badge qr">⏳ ...</span>' :
+                    '<span class="badge off">❌ Offline</span>';
+      const date = new Date(u.createdAt).toLocaleDateString('en-GB');
+      const pass = u.dashPassword ? '<span class="pass-copy" onclick="copyPw(\'' + u.dashPassword + '\')" title="Click to copy">' + u.dashPassword + '</span>' : '<span style="color:#666">—</span>';
+      html += '<tr><td style="font-family:monospace;font-weight:700">' + u.phone + '</td><td>' + u.name + '</td><td>' + pass + '</td><td>' + badge + '</td><td style="color:#8a8aa0;font-size:0.84em">' + date + '</td>';
+      html += '<td><button class="remove-btn" onclick="removeUser(\'' + u.phone + '\')">🗑️ Remove</button></td></tr>';
+    }
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  } catch(e) {}
+}
+function copyPw(pw) {
+  navigator.clipboard.writeText(pw).then(() => {
+    const t = document.getElementById('toast');
+    t.textContent = '✅ Copied: ' + pw;
+    t.className = 'toast success show';
+    setTimeout(() => t.classList.remove('show'), 2200);
+  });
+}
+async function removeUser(phone) {
+  if (!confirm('🗑️ Remove user: ' + phone + '?')) return;
+  if (!confirm('🚨 Cannot be undone!')) return;
+  try {
+    const r = await fetch('/api/admin/remove-user', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: KEY, phone })
+    });
+    const d = await r.json();
+    if (d.success) { alert('✅ Removed: ' + phone); fetchUsers(); fetchStatus(); }
+    else alert('❌ ' + (d.error || 'Failed'));
+  } catch (e) { alert('❌ ' + e.message); }
+}
+fetchStatus(); fetchUsers();
+setInterval(fetchStatus, 5000);
+setInterval(fetchUsers, 10000);
+</script>
+</body></html>

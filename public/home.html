@@ -1,0 +1,81 @@
+<!DOCTYPE html><html><head><title>LUXALGO MD</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<style>
+.wrapper{max-width:520px;text-align:center}
+.status-pill{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 24px;border-radius:60px;
+  background:rgba(255,255,255,0.04);
+  border:1.5px solid rgba(255,255,255,0.08);
+  margin:10px 0 30px;font-size:0.9em;font-weight:700;
+}
+.status-pill .dot{width:10px;height:10px;border-radius:50%}
+.status-pill .dot.on{
+  background:#10b981;
+  box-shadow:0 0 15px #10b981,0 0 30px rgba(16,185,129,0.5);
+  animation:pulse 1.8s infinite;
+}
+.status-pill .dot.off{
+  background:#ef4444;
+  box-shadow:0 0 15px #ef4444,0 0 30px rgba(239,68,68,0.5);
+  animation:pulse 1.8s infinite;
+}
+@keyframes pulse{50%{opacity:0.5;transform:scale(0.85)}}
+.actions{display:flex;flex-direction:column;gap:14px;margin-top:12px}
+.action-btn{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:20px;border-radius:16px;font-weight:800;text-decoration:none;
+  font-size:1em;letter-spacing:1px;transition:all 0.4s cubic-bezier(0.2,0.9,0.3,1);
+  position:relative;overflow:hidden;border:none;cursor:pointer;
+}
+.action-btn.primary{
+  background:linear-gradient(135deg,#8b5cf6 0%,#a855f7 45%,#ec4899 100%);
+  background-size:200% 100%;
+  color:#fff;
+  box-shadow:0 15px 45px rgba(139,92,246,0.45),inset 0 1px 0 rgba(255,255,255,0.25);
+  text-shadow:0 0 12px rgba(255,255,255,0.4);
+}
+.action-btn.primary:hover{
+  transform:translateY(-4px);
+  background-position:100% 0;
+  box-shadow:0 25px 60px rgba(139,92,246,0.6),inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.action-btn.secondary{
+  background:linear-gradient(135deg,rgba(251,191,36,0.18),rgba(236,72,153,0.15));
+  border:1.5px solid rgba(251,191,36,0.4);
+  color:#fde68a;
+  box-shadow:0 12px 35px rgba(251,191,36,0.2);
+}
+.action-btn.secondary:hover{
+  transform:translateY(-4px);
+  color:#fff;
+  border-color:rgba(251,191,36,0.6);
+  box-shadow:0 20px 50px rgba(251,191,36,0.35);
+}
+.action-btn .emoji{font-size:1.4em;filter:drop-shadow(0 0 8px rgba(255,255,255,0.5))}
+</style></head>
+<body>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<div class="wrapper">
+  <div class="emoji-logo">🤖</div>
+  <h1 class="logo-text">LUXALGO MD</h1>
+  <div class="subtitle">WhatsApp Bot Platform</div>
+  <div class="status-pill">
+    <span class="dot {{STATUS_CLASS}}"></span>
+    <span>{{STATUS_TEXT}}</span>
+  </div>
+  <div class="actions">
+    <a href="/login" class="action-btn primary">
+      <span class="emoji">🔐</span>
+      <span>Dashboard Login</span>
+    </a>
+    <a href="/freebot" class="action-btn secondary">
+      <span class="emoji">🚀</span>
+      <span>Deploy Free Bot</span>
+    </a>
+  </div>
+  <div class="footer">✨ Powered by <span>LUXALGO</span> 🖤</div>
+</div>
+</body></html>

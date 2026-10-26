@@ -1,0 +1,456 @@
+<!DOCTYPE html><html><head><title>My Settings — LUXALGO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<style>
+.container{max-width:960px}
+.tabs{display:flex;gap:8px;margin-bottom:22px;padding:6px;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,255,255,0.08);border-radius:16px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:120px;padding:13px 18px;border:none;border-radius:12px;background:transparent;color:#8a8aa0;font-family:inherit;font-size:0.86em;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.35s;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.tab:hover{color:#d5d5e0;background:rgba(255,255,255,0.04)}
+.tab.active{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 10px 30px rgba(139,92,246,0.4)}
+.tab .ico{font-size:1.1em}
+.tab-content{display:none;animation:fadeUp 0.5s ease}
+.tab-content.active{display:block}
+@media(max-width:640px){.tabs{padding:5px;gap:6px}.tab{padding:11px 14px;font-size:0.76em;min-width:auto;flex:0 0 auto}}
+</style></head>
+<body>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<div class="container">
+  <div class="header">
+    <div class="brand">
+      <div class="mini-logo">⚙️</div>
+      <div style="font-size:1.3em;font-weight:900;background:linear-gradient(120deg,#ec4899,#a855f7,#8b5cf6);background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shine 5s linear infinite">My Settings</div>
+    </div>
+    <div class="nav">
+      <span class="userinfo">👤 {{NAME}}</span>
+      <a href="/user/settings?key={{KEY}}" class="active">⚙️ Settings</a>
+      <a href="/login">🚪 Logout</a>
+    </div>
+  </div>
+
+  <div class="info-banner">
+    <span class="icon-big">🔑</span>
+    <div class="info">
+      <div class="ttl">Your Password: {{PASSWORD}}</div>
+      <div class="sub">📱 {{PHONE}} • 🔒 Keep this safe!</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('general', this)">
+      <span class="ico">⚙️</span> <span>General</span>
+    </button>
+    <button class="tab" onclick="switchTab('antilink', this)">
+      <span class="ico">🛡️</span> <span>Antilink</span>
+    </button>
+    <button class="tab" onclick="switchTab('antidelete', this)">
+      <span class="ico">🗑️</span> <span>Anti-Delete</span>
+    </button>
+  </div>
+
+  <div id="tab-general" class="tab-content active">
+    <div id="config-container">
+      <div class="card" style="text-align:center;padding:48px"><span class="loading"></span> Loading your settings...</div>
+    </div>
+  </div>
+
+  <!-- 🛡️ ANTILINK TAB -->
+  <div id="tab-antilink" class="tab-content">
+    <div class="card">
+      <h3>🛡️ Antilink Control</h3>
+
+      <div class="field">
+        <div class="toggle">
+          <span class="toggle-label">Enable Antilink</span>
+          <label class="switch"><input type="checkbox" id="al-enabled"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Action when link is caught</label>
+        <select id="al-action">
+          <option value="delete">🗑️ Delete only</option>
+          <option value="warn">⚠️ Warn + Delete (kick after limit)</option>
+          <option value="kick">🚫 Kick instantly</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Warn limit (before auto-kick)</label>
+        <input type="number" id="al-limit" min="1" max="10" value="3">
+      </div>
+
+      <div class="field">
+        <div class="toggle">
+          <span class="toggle-label">Enable Whitelist</span>
+          <label class="switch"><input type="checkbox" id="al-whitelist-enabled"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Whitelist domains (comma separated)</label>
+        <textarea id="al-whitelist" placeholder="whatsapp.com,youtube.com,github.com" style="min-height:60px;font-family:'JetBrains Mono',monospace;font-size:0.9em"></textarea>
+      </div>
+
+      <div class="field">
+        <div class="toggle">
+          <span class="toggle-label">Notify user after delete</span>
+          <label class="switch"><input type="checkbox" id="al-notify"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="toggle">
+          <span class="toggle-label">Skip group admins</span>
+          <label class="switch"><input type="checkbox" id="al-skipadmins"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="toggle">
+          <span class="toggle-label">Skip bot's own messages</span>
+          <label class="switch"><input type="checkbox" id="al-skipbot"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;padding:14px;background:rgba(0,0,0,0.4);border-radius:12px;font-family:'JetBrains Mono',monospace;font-size:0.86em;border:1.5px solid rgba(255,255,255,0.06)">
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between">
+          <span style="color:#8a8aa0">🛡️ Status</span><span id="al-status">--</span>
+        </div>
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between">
+          <span style="color:#8a8aa0">⚡ Action</span><span id="al-action-status">--</span>
+        </div>
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between">
+          <span style="color:#8a8aa0">🔢 Warn limit</span><span id="al-limit-status">--</span>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="color:#8a8aa0">✅ Whitelist</span><span id="al-whitelist-status">--</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+        <button class="btn sm green" onclick="alQuick('on')">
+          <span style="font-size:1.1em">✅</span><span>Turn ON</span>
+        </button>
+        <button class="btn sm danger" onclick="alQuick('off')">
+          <span style="font-size:1.1em">❌</span><span>Turn OFF</span>
+        </button>
+      </div>
+
+      <button class="btn sm green" id="alSaveBtn" onclick="saveAntilink()" style="width:100%;margin-top:12px">
+        <span style="font-size:1.2em">💾</span>
+        <span id="alSaveLabel">Save Antilink</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 🗑️ ANTI-DELETE TAB -->
+  <div id="tab-antidelete" class="tab-content">
+    <div class="card">
+      <h3>🛡️ Anti-Delete Control</h3>
+      <div class="field">
+        <div class="toggle">
+          <span class="toggle-label">💬 Direct Messages</span>
+          <label class="switch"><input type="checkbox" id="ad-dm" onchange="toggleAD('dm')"><span class="slider"></span></label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="toggle">
+          <span class="toggle-label">🏘️ Group Chats</span>
+          <label class="switch"><input type="checkbox" id="ad-gc" onchange="toggleAD('gc')"><span class="slider"></span></label>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+        <button class="btn sm green" onclick="adAction('set_all')">
+          <span style="font-size:1.1em">✅</span><span>All ON</span>
+        </button>
+        <button class="btn sm danger" onclick="adAction('off_all')">
+          <span style="font-size:1.1em">❌</span><span>All OFF</span>
+        </button>
+      </div>
+      <div style="margin-top:16px;padding:14px;background:rgba(0,0,0,0.4);border-radius:12px;font-family:'JetBrains Mono',monospace;font-size:0.86em;border:1.5px solid rgba(255,255,255,0.06)">
+        <div style="margin-bottom:6px;display:flex;justify-content:space-between">
+          <span style="color:#8a8aa0">💬 DM</span><span id="ad-dm-status">--</span>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="color:#8a8aa0">🏘️ GC</span><span id="ad-gc-status">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn sm danger" onclick="resetConfig()" id="resetBtn">
+      <span style="font-size:1.15em;filter:drop-shadow(0 0 8px rgba(255,255,255,0.6))">🏭</span>
+      <span id="resetLabel">Reset</span>
+    </button>
+    <button class="btn sm green" id="saveBtn" onclick="saveConfig()">
+      <span style="font-size:1.2em;filter:drop-shadow(0 0 10px rgba(255,255,255,0.8))">💾</span>
+      <span id="saveLabel">Save Settings</span>
+    </button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const KEY = '{{KEY}}';
+let currentConfig = {};
+
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function switchTab(tabName, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tabName).classList.add('active');
+}
+
+async function loadConfig() {
+  try {
+    const r = await fetch('/api/user/config?key=' + KEY);
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error || 'Failed');
+    currentConfig = d.config;
+    renderForm(d.config);
+  } catch (e) {
+    document.getElementById('config-container').innerHTML = '<div class="card" style="color:#fda4af;text-align:center;padding:44px">❌ ' + e.message + '</div>';
+  }
+}
+
+function isBool(val) { return val === 'true' || val === 'false'; }
+
+function renderForm(cfg) {
+  const groups = {
+    '🔧 Bot Settings': ['PREFIX', 'MODE', 'BUTTON', 'BOT_NAME', 'STICKER_NAME', 'OWNER_NAME', 'OWNER_NUMBER', 'DESCRIPTION'],
+    '🖼️ Alive Settings': ['ALIVE_IMG', 'LIVE_MSG'],
+    '💬 Reaction Settings': ['AUTO_REACT', 'CUSTOM_REACT', 'CUSTOM_REACT_EMOJIS'],
+    '📱 Status Settings': ['AUTO_STATUS_SEEN', 'AUTO_STATUS_REACT', 'AUTO_STATUS_REPLY', 'AUTO_STATUS_MSG', 'STATUS_REACT_MODE', 'CUSTOM_STATUS_EMOJI', 'CUSTOM_STATUS_EMOJIS'],
+    '🤖 Auto AI': ['AUTO_AI', 'AUTO_AI_COOLDOWN', 'AUTO_AI_GROUPS', 'AUTO_AI_DMS'],
+    '⚡ Automation': ['READ_MESSAGE', 'READ_CMD', 'AUTO_VOICE', 'AUTO_STICKER', 'AUTO_REPLY', 'AUTO_TYPING', 'AUTO_RECORDING', 'ALWAYS_ONLINE', 'ANTI_VV'],
+    '🌐 Mode': ['PUBLIC_MODE']
+  };
+  let html = '';
+  let cardIdx = 0;
+  for (const [title, fields] of Object.entries(groups)) {
+    let hasFields = fields.some(f => f in cfg);
+    if (!hasFields) continue;
+    html += '<div class="card" style="animation-delay:' + (cardIdx * 0.06) + 's"><h3>' + title + '</h3>';
+    for (const f of fields) {
+      if (!(f in cfg)) continue;
+      const val = String(cfg[f]);
+      const label = f.replace(/_/g, ' ').toLowerCase();
+
+      if (isBool(val)) {
+        html += '<div class="field"><div class="toggle"><span class="toggle-label">' + label + '</span><label class="switch"><input type="checkbox" data-key="' + f + '" ' + (val === 'true' ? 'checked' : '') + '><span class="slider"></span></label></div></div>';
+      } else if (f === 'MODE') {
+        html += '<div class="field"><label>' + label + '</label><select data-key="' + f + '">' +
+          '<option value="public" ' + (val === 'public' ? 'selected' : '') + '>🌐 public</option>' +
+          '<option value="private" ' + (val === 'private' ? 'selected' : '') + '>🔒 private</option>' +
+          '<option value="inbox" ' + (val === 'inbox' ? 'selected' : '') + '>📥 inbox</option>' +
+          '<option value="groups" ' + (val === 'groups' ? 'selected' : '') + '>👥 groups</option>' +
+          '</select></div>';
+      } else if (f === 'STATUS_REACT_MODE') {
+        html += '<div class="field"><label>' + label + '</label><select data-key="' + f + '">' +
+          '<option value="default" ' + (val === 'default' ? 'selected' : '') + '>⚙️ default</option>' +
+          '<option value="custom" ' + (val === 'custom' ? 'selected' : '') + '>🎨 custom</option>' +
+          '<option value="random" ' + (val === 'random' ? 'selected' : '') + '>🎲 random</option>' +
+          '</select></div>';
+      } else if (f === 'DESCRIPTION' || f === 'AUTO_STATUS_MSG' || f === 'LIVE_MSG') {
+        html += '<div class="field"><label>' + label + '</label><textarea data-key="' + f + '">' + val + '</textarea></div>';
+      } else if (f === 'AUTO_AI_COOLDOWN') {
+        html += '<div class="field"><label>' + label + ' (seconds)</label><input type="number" min="1" max="60" data-key="' + f + '" value="' + val + '"></div>';
+      } else {
+        html += '<div class="field"><label>' + label + '</label><input type="text" data-key="' + f + '" value="' + val + '"></div>';
+      }
+    }
+    html += '</div>';
+    cardIdx++;
+  }
+  document.getElementById('config-container').innerHTML = html || '<div class="card" style="text-align:center;padding:44px">No settings available</div>';
+}
+
+async function saveConfig() {
+  const btn = document.getElementById('saveBtn');
+  const label = document.getElementById('saveLabel');
+  btn.disabled = true;
+  label.innerHTML = '<span class="loading"></span>Saving...';
+  const newConfig = { ...currentConfig };
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.dataset.key;
+    if (el.type === 'checkbox') newConfig[k] = el.checked ? 'true' : 'false';
+    else newConfig[k] = el.value;
+  });
+  try {
+    const r = await fetch('/api/user/config', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ key: KEY, config: newConfig })
+    });
+    const d = await r.json();
+    if (d.success) { currentConfig = newConfig; toast('✅ Settings saved!', 'success'); }
+    else throw new Error(d.error);
+  } catch (e) { toast('❌ ' + e.message, 'error'); }
+  finally { btn.disabled = false; label.textContent = 'Save Settings'; }
+}
+
+async function resetConfig() {
+  if (!confirm('🏭 Reset to default settings?')) return;
+  const btn = document.getElementById('resetBtn');
+  const label = document.getElementById('resetLabel');
+  btn.disabled = true; label.textContent = 'Resetting...';
+  try {
+    const r = await fetch('/api/user/config/reset', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ key: KEY })
+    });
+    const d = await r.json();
+    if (d.success) { toast('🏭 Reset done!', 'success'); setTimeout(() => location.reload(), 800); }
+    else throw new Error(d.error);
+  } catch (e) { toast('❌ ' + e.message, 'error'); btn.disabled = false; label.textContent = 'Reset'; }
+}
+
+// ═══════ ANTILINK ═══════
+async function loadAntilink() {
+  try {
+    const r = await fetch('/api/antilink?key=' + KEY);
+    const d = await r.json();
+    if (!d.success) return;
+
+    document.getElementById('al-enabled').checked = !!d.enabled;
+    document.getElementById('al-action').value = d.action || 'delete';
+    document.getElementById('al-limit').value = d.warnLimit || '3';
+    document.getElementById('al-whitelist').value = d.whitelist || '';
+    document.getElementById('al-whitelist-enabled').checked = d.whitelistEnabled !== false;
+    document.getElementById('al-notify').checked = !!d.notify;
+    document.getElementById('al-skipadmins').checked = !!d.skipAdmins;
+    document.getElementById('al-skipbot').checked = d.skipBot !== false;
+
+    updateAntilinkStatus(d);
+  } catch (e) { console.error('Antilink load:', e); }
+}
+
+function updateAntilinkStatus(d) {
+  if (!d) {
+    d = {
+      enabled: document.getElementById('al-enabled').checked,
+      action: document.getElementById('al-action').value,
+      warnLimit: document.getElementById('al-limit').value,
+      whitelistEnabled: document.getElementById('al-whitelist-enabled').checked
+    };
+  }
+  document.getElementById('al-status').innerHTML = d.enabled ? '<span style="color:#34d399;font-weight:900">✅ ON</span>' : '<span style="color:#fda4af;font-weight:900">❌ OFF</span>';
+
+  const actionMap = { delete: '🗑️ Delete', warn: '⚠️ Warn+Kick', kick: '🚫 Kick' };
+  document.getElementById('al-action-status').innerHTML = '<span style="color:#a78bfa;font-weight:900">' + (actionMap[d.action] || d.action) + '</span>';
+  document.getElementById('al-limit-status').innerHTML = '<span style="color:#fbbf24;font-weight:900">' + (d.warnLimit || '3') + '</span>';
+  document.getElementById('al-whitelist-status').innerHTML = d.whitelistEnabled
+    ? '<span style="color:#34d399;font-weight:900">✅ ON</span>'
+    : '<span style="color:#fda4af;font-weight:900">❌ OFF</span>';
+}
+
+function alPayload(enabled) {
+  return {
+    key: KEY,
+    enabled: enabled !== undefined ? enabled : document.getElementById('al-enabled').checked,
+    action: document.getElementById('al-action').value,
+    warnLimit: document.getElementById('al-limit').value,
+    whitelist: document.getElementById('al-whitelist').value.trim(),
+    whitelistEnabled: document.getElementById('al-whitelist-enabled').checked,
+    notify: document.getElementById('al-notify').checked,
+    skipAdmins: document.getElementById('al-skipadmins').checked,
+    skipBot: document.getElementById('al-skipbot').checked
+  };
+}
+
+async function saveAntilink() {
+  const btn = document.getElementById('alSaveBtn');
+  const label = document.getElementById('alSaveLabel');
+  btn.disabled = true;
+  label.innerHTML = '<span class="loading"></span>Saving...';
+  const payload = alPayload();
+  try {
+    const r = await fetch('/api/antilink', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if (d.success) {
+      toast('✅ Antilink saved!', 'success');
+      updateAntilinkStatus(payload);
+    } else throw new Error(d.error || 'Save failed');
+  } catch (e) { toast('❌ ' + e.message, 'error'); }
+  finally { btn.disabled = false; label.textContent = 'Save Antilink'; }
+}
+
+async function alQuick(mode) {
+  const checked = mode === 'on';
+  document.getElementById('al-enabled').checked = checked;
+  const payload = alPayload(checked);
+  try {
+    const r = await fetch('/api/antilink', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if (d.success) {
+      toast(checked ? '🛡️ Antilink ON' : '🛡️ Antilink OFF', 'success');
+      updateAntilinkStatus(payload);
+    } else toast('❌ ' + (d.error || 'Failed'), 'error');
+  } catch (e) { toast('❌ ' + e.message, 'error'); }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  ['al-enabled','al-action','al-limit','al-whitelist-enabled'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', () => updateAntilinkStatus());
+  });
+});
+
+// ═══════ ANTI-DELETE ═══════
+async function loadAntiDelete() {
+  try {
+    const r = await fetch('/api/antidelete?key=' + KEY);
+    const d = await r.json();
+    if (d.success) {
+      document.getElementById('ad-dm').checked = d.dm;
+      document.getElementById('ad-gc').checked = d.gc;
+      updateADStatus(d.dm, d.gc);
+    }
+  } catch (e) {}
+}
+
+function updateADStatus(dm, gc) {
+  document.getElementById('ad-dm-status').innerHTML = dm ? '<span style="color:#34d399;font-weight:900">✅ ON</span>' : '<span style="color:#fda4af;font-weight:900">❌ OFF</span>';
+  document.getElementById('ad-gc-status').innerHTML = gc ? '<span style="color:#34d399;font-weight:900">✅ ON</span>' : '<span style="color:#fda4af;font-weight:900">❌ OFF</span>';
+}
+
+async function adAction(action) {
+  try {
+    const r = await fetch('/api/antidelete', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ key: KEY, action })
+    });
+    const d = await r.json();
+    if (d.success) {
+      document.getElementById('ad-dm').checked = d.dm;
+      document.getElementById('ad-gc').checked = d.gc;
+      updateADStatus(d.dm, d.gc);
+      toast('✅ Updated!', 'success');
+    } else toast('❌ ' + (d.error || 'Failed'), 'error');
+  } catch (e) { toast('❌ ' + e.message, 'error'); }
+}
+
+async function toggleAD(type) { await adAction('toggle_' + type); }
+
+loadConfig();
+loadAntilink();
+loadAntiDelete();
+</script>
+</body></html>

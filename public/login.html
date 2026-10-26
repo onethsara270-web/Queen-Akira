@@ -1,0 +1,206 @@
+<!DOCTYPE html><html><head><title>Login — LUXALGO MD</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<style>
+.wrapper{max-width:440px}
+.help-box{
+  background:linear-gradient(145deg,rgba(139,92,246,0.1),rgba(236,72,153,0.06));
+  border:1.5px solid rgba(168,85,247,0.28);
+  border-radius:20px;padding:22px 24px;margin-top:24px;text-align:left;
+  backdrop-filter:blur(20px);
+  box-shadow:0 15px 45px rgba(139,92,246,0.15);
+}
+.help-box h4{
+  background:linear-gradient(135deg,#ec4899,#a855f7);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-size:0.8em;margin-bottom:12px;letter-spacing:2px;text-transform:uppercase;
+  font-weight:800;display:flex;align-items:center;gap:8px;
+}
+.help-box ul{list-style:none;padding:0;margin:0}
+.help-box li{
+  color:#b0a4c8;font-size:0.82em;line-height:1.85;
+  padding-left:26px;position:relative;margin-bottom:7px;
+}
+.help-box li::before{content:'✨';position:absolute;left:0;top:0;font-size:0.9em}
+.help-box li strong{
+  color:#ec4899;font-family:'JetBrains Mono',monospace;
+  background:rgba(236,72,153,0.12);padding:2px 8px;border-radius:6px;
+  border:1px solid rgba(236,72,153,0.25);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🎯 LOGIN BUTTON — Color සහිතව
+   ═══════════════════════════════════════════════════════════ */
+.login-btn{
+  position:relative;
+  width:100%;
+  padding:17px 24px;
+  margin-top:8px;
+  border:none;
+  border-radius:14px;
+  color:#fff;
+  font-family:inherit;
+  font-size:0.92em;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  overflow:hidden;
+  transition:all 0.4s cubic-bezier(0.2,0.9,0.3,1);
+  
+  /* ✅ Solid gradient background */
+  background:linear-gradient(135deg,#8b5cf6 0%,#a855f7 40%,#ec4899 100%);
+  background-size:200% 100%;
+  
+  /* ✅ Multi-layer shadow */
+  box-shadow:
+    0 12px 35px rgba(139,92,246,0.45),
+    0 0 50px rgba(236,72,153,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -2px 6px rgba(0,0,0,0.15);
+  
+  /* ✅ Text glow */
+  text-shadow:0 0 12px rgba(255,255,255,0.5);
+}
+
+/* Shine sweep — උඩින් යනවා, පහළින් නෙවෙයි */
+.login-btn::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:60%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
+  transform:skewX(-20deg);
+  transition:left 0.8s;
+  pointer-events:none;
+}
+.login-btn:hover::before{left:150%}
+
+.login-btn:hover{
+  transform:translateY(-3px);
+  background-position:100% 0;
+  box-shadow:
+    0 20px 55px rgba(139,92,246,0.6),
+    0 0 80px rgba(236,72,153,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.4),
+    inset 0 -2px 6px rgba(0,0,0,0.15);
+}
+
+.login-btn:active{transform:translateY(-1px) scale(0.985)}
+.login-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none}
+
+.login-btn .ico{
+  font-size:1.1em;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,0.8));
+  position:relative;
+  z-index:1;
+}
+.login-btn #btnText{
+  position:relative;
+  z-index:1;
+}
+.login-btn .loader{
+  display:none;
+  width:18px;
+  height:18px;
+  border:2.5px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  margin:0;
+  position:relative;
+  z-index:1;
+}
+
+.deploy-link{
+  padding:15px !important;
+  font-size:0.88em !important;
+  border-radius:14px !important;
+}
+
+@media(max-width:640px){
+  .login-btn{
+    padding:16px 20px;
+    font-size:0.88em;
+    letter-spacing:1.8px;
+  }
+}
+</style></head>
+<body>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<div class="wrapper">
+  <div class="glass-card">
+    <div class="emoji-logo" style="width:96px;height:96px;font-size:3.2em;margin-bottom:22px;border-radius:30px">🔐</div>
+    <h1 class="logo-text" style="font-size:2em">LUXALGO MD</h1>
+    <div class="subtitle" style="margin-bottom:26px">Access Panel</div>
+    <div id="error" class="error"></div>
+    <form id="form" onsubmit="return handleLogin(event)">
+      <div class="input-group" style="margin-bottom:16px">
+        <label>🔑 Your Password</label>
+        <input type="tel" id="pass" class="pw-input" placeholder="•••••" maxlength="20" inputmode="numeric" autocomplete="off" autofocus>
+      </div>
+      <button type="submit" class="login-btn" id="btn">
+        <span class="ico" id="btnIcon">→</span>
+        <span id="btnText">Enter Dashboard</span>
+        <div class="loader" id="loader"></div>
+      </button>
+    </form>
+    <div class="footer" style="margin-top:20px">✨ Powered by <span>LUXALGO</span> 🖤</div>
+  </div>
+  <div class="divider" style="margin:22px 0 18px">OR</div>
+  <a href="/freebot" class="deploy-link">
+    <span style="font-size:1.3em;filter:drop-shadow(0 0 8px rgba(255,255,255,0.5))">🚀</span>
+    <span>Deploy Your Free Bot</span>
+  </a>
+  <div class="help-box">
+    <h4>💡 Need your password?</h4>
+    <ul>
+      <li>Send <strong>.password</strong> to your bot</li>
+      <li>You'll get a 5-digit password</li>
+      <li>Use it here to login</li>
+      <li>Each bot has its own password</li>
+    </ul>
+  </div>
+</div>
+<script>
+async function handleLogin(e){
+  e.preventDefault();
+  const pass = document.getElementById('pass').value.trim();
+  const btn = document.getElementById('btn');
+  const btnText = document.getElementById('btnText');
+  const btnIcon = document.getElementById('btnIcon');
+  const loader = document.getElementById('loader');
+  const error = document.getElementById('error');
+  error.classList.remove('show');
+  if(!pass){error.textContent='⚠️ Enter your password';error.classList.add('show');return false}
+  btn.disabled=true;btnText.style.display='none';btnIcon.style.display='none';loader.style.display='block';
+  try {
+    const r = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass})});
+    const d = await r.json();
+    if(d.success){
+      if(d.type === 'owner') window.location.href='/dashboard?key='+encodeURIComponent(pass);
+      else window.location.href='/user/settings?key='+encodeURIComponent(pass);
+      return false;
+    }
+    error.textContent='❌ ' + (d.error || 'Wrong password!');
+    error.classList.add('show');
+  } catch(err){
+    error.textContent='❌ Connection error';
+    error.classList.add('show');
+  }
+  btn.disabled=false;btnText.style.display='inline';btnIcon.style.display='inline';loader.style.display='none';
+  document.getElementById('pass').value='';document.getElementById('pass').focus();
+  return false;
+}
+document.getElementById('pass').addEventListener('input', function(){
+  this.value = this.value.replace(/[^0-9a-zA-Z]/g, '').slice(0, 20);
+});
+</script>
+</body></html>

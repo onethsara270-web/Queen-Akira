@@ -92,7 +92,7 @@ const baseConfig = {
     AUTO_STICKER: get('AUTO_STICKER', "false"),
     ALIVE_IMG: get('ALIVE_IMG', "https://files.catbox.moe/vhs0nb.png"),
     LIVE_MSG: get('LIVE_MSG', "> HELLO I'AM *QUEEN AKIRA*⚡"),
-    BUTTON: get('BUTTON', "true"),
+    BUTTON: get('BUTTON', "false"),
 
     // ─── SECURITY / ANTILINK ───
     ANTI_BAD: get('ANTI_BAD', "true"),

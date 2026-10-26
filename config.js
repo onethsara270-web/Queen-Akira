@@ -49,7 +49,7 @@ function get(key, defaultValue) {
 // ══════════════════════════════════════════════════════════════
 const baseConfig = {
     // ─── BOT CORE ───
-    SESSION_ID: process.env.SESSION_ID || get('SESSION_ID', "LUXALGO=7oRHUYia#6KHG7HJcRW4a6ETiq9ZCoevPjLL2VHx7YjiQHPaIWAc"),
+    SESSION_ID: process.env.SESSION_ID || get('SESSION_ID', "LUXALGO=vkJ1hD7Y#uwZEkIoFXvuuEKUROPYwZ5CqvwIbM6KXbRfjL5VZRRk"),
     PREFIX: get('PREFIX', "."),
     BOT_NAME: get('BOT_NAME', "QUEEN AKIRA MINI"),
     STICKER_NAME: get('STICKER_NAME', "QUEEN AKIRA MINI"),
